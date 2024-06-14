@@ -5,16 +5,28 @@ import json
 def get_medication_fhir_resource(extracted_text, code, description):
     with open('../fhir-resources/medication.json', 'r') as f:
         medication = f.read()
-        medication = medication.replace('<code>', code)
-        medication = medication.replace('<description>', description)
+        
+        if not code:
+            medication = json.loads(medication)
+            del medication['resource']['code']['coding']
+            medication = json.dumps(medication)
+        else:
+            medication = medication.replace('<code>', code)
+            medication = medication.replace('<description>', description)
         medication = medication.replace('<extracted_text>', extracted_text)
         return medication
 
 def get_condition_fhir_resource(extracted_text, code, description, patient_id):
     with open('../fhir-resources/medcond.json', 'r') as f:
         condition = f.read()
-        condition = condition.replace('<code>', code)
-        condition = condition.replace('<description>', description)
+
+        if not code:
+            condition = json.loads(condition)
+            del condition['resource']['code']['coding']
+            condition = json.dumps(condition)
+        else:
+            condition = condition.replace('<code>', code)
+            condition = condition.replace('<description>', description)
         condition = condition.replace('<extracted_text>', extracted_text)
         condition = condition.replace('<patient-id>', patient_id)
         return condition
@@ -22,8 +34,14 @@ def get_condition_fhir_resource(extracted_text, code, description, patient_id):
 def get_procedure_fhir_resource(extracted_text, code, description, patient_id):
     with open('../fhir-resources/procedure.json', 'r') as f:
         procedure = f.read()
-        procedure = procedure.replace('<code>', code)
-        procedure = procedure.replace('<description>', description)
+
+        if not code:
+            procedure = json.loads(procedure)
+            del procedure['resource']['code']['coding']
+            procedure = json.dumps(procedure)
+        else:
+            procedure = procedure.replace('<code>', code)
+            procedure = procedure.replace('<description>', description)
         procedure = procedure.replace('<extracted_text>', extracted_text)
         procedure = procedure.replace('<patient-id>', patient_id)
         return procedure
@@ -31,8 +49,14 @@ def get_procedure_fhir_resource(extracted_text, code, description, patient_id):
 def get_symptom_fhir_resource(extracted_text, code, description, patient_id):
     with open('../fhir-resources/symptom.json', 'r') as f:
         symptom = f.read()
-        symptom = symptom.replace('<code>', code)
-        symptom = symptom.replace('<description>', description)
+
+        if not code:
+            symptom = json.loads(symptom)
+            del symptom['resource']['code']['coding']
+            symptom = json.dumps(symptom)
+        else:
+            symptom = symptom.replace('<code>', code)
+            symptom = symptom.replace('<description>', description)
         symptom = symptom.replace('<extracted_text>', extracted_text)
         symptom = symptom.replace('<patient-id>', patient_id)
         return symptom
@@ -71,6 +95,6 @@ def generate_ehr(text, entity_model, patient_id='example/patient'):
     ehr_record = knit_fhir_resources(normalized_entities, patient_id)
     return ehr_record
 
-text = 'The patient was prescribed 100mg of aspirin for 5 days. Patient has a history of diabetes and hypertension. He is currently taking metformin and lisinopril. The patient is scheduled for a coronary artery bypass grafting procedure.'
+text = """This is a 44 year old female with PMH of PCOS, Obesity, HTN who presented with symptoms of cholecystitis and was found incidentally to have a large pericardial effusion. A pericardiocentesis was performed and the fluid analysis was consistent with Burkitt's lymphoma. Pericardial fluid was kappa light chain restricted CD10 positive monotypic B cells expressing FMC-7, CD19, CD20, and myc rearrangement consistent with Burkitt's Lymphoma. A subsequent lumbar puncture and bone marrow biopsy were negative for any involvement which made this a primary cardiac lymphoma. A cardiac MRI showed a mass that was 3cm x 1cm on the lateral wall of the right atrium adjacent to the AV junction. Past Medical History: 1. Rare migraines 2. HTN 3. Obesity 4. PCOS/infertility 5. Viral encephalitis/meningitis-->ICH-->seizure/stroke ([**2137**]) =- from severe sinus infxn, caused mild non-focal residual deficits 6. CSF leak w/ meningitis s/p lumbar drain placement 7. R LE DVT s/p IVC filter placement 8. Knee surgery"""
 entity_model = [('MEDCOND', 'alvaroalon2/biobert_diseases_ner'), ('MEDICATION', 'alvaroalon2/biobert_chemical_ner')]
 print(generate_ehr(text, entity_model))
