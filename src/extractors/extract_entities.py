@@ -101,7 +101,7 @@ def process_text(entity_model, text):
 
 # input of script
 #entity_model = [('MEDCOND', 'medcond'), ('SYMPTOM', 'symptom'), ('MEDICATION', 'medication'), ('PROCEDURE', 'procedure')]
-entity_model = [('MEDCOND', 'alvaroalon2/biobert_diseases_ner'), ('MEDICATION', 'alvaroalon2/biobert_chemical_ner')]
-text = "The patient has a history of diabetes and hypertension. He is currently taking metformin and lisinopril. The patient is scheduled for a coronary artery bypass grafting procedure."
+#entity_model = [('MEDCOND', 'alvaroalon2/biobert_diseases_ner'), ('MEDICATION', 'alvaroalon2/biobert_chemical_ner')]
+#text = "The patient has a history of diabetes and hypertension. He is currently taking metformin and lisinopril. The patient is scheduled for a coronary artery bypass grafting procedure."
 
-print(process_text(entity_model, text))
+#print(process_text(entity_model, text))

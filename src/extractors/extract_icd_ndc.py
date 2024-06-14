@@ -110,5 +110,5 @@ def map_entities_to_ndc_icd_code(entities):
 #entities = ["COPD", "interstitial lung disease", "hypertension", "bronchodilators", "steroids", "bingboingo bongboingo", "adhd", "attention deficit hyperactivity"]
 #entities = ["hypertension", "metformin", "lisinopril", "diabetes"]
 
-entities = [('diabetes', 'MEDCOND', 29, 37), ('hypertension', 'MEDCOND', 42, 54), ('metformin', 'MEDICATION', 79, 88), ('lisinopril', 'MEDICATION', 93, 103)]
-print(map_entities_to_ndc_icd_code(entities))
+#entities = [('diabetes', 'MEDCOND', 29, 37), ('hypertension', 'MEDCOND', 42, 54), ('metformin', 'MEDICATION', 79, 88), ('lisinopril', 'MEDICATION', 93, 103)]
+#print(map_entities_to_ndc_icd_code(entities))
