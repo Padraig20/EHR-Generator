@@ -1,10 +1,5 @@
-import os
-import csv
 import spacy
-import pandas as pd
-from tqdm import tqdm
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline
-import torch
 
 def extract_entities_sentences(nlp, ner_model, text):
     doc = nlp(text)
@@ -95,7 +90,7 @@ def process_text(entity_model, text):
         
     entities = reconstructed_entities
     
-    print(f"Extracted {len(entities)} entities in total")
+    print(f"Extracted {len(entities)} entities in total (after reconstruction)")
     
     return entities
 

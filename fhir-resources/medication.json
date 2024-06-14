@@ -1,0 +1,16 @@
+{
+    "resource": {
+        "resourceType": "Medication",
+        "id": "example-medication",
+        "code": {
+            "coding": [
+                {
+                    "system": "http://hl7.org/fhir/sid/ndc",
+                    "code": "<code>",
+                    "display": "<description>"
+                }
+            ],
+            "text": "<extracted_text>"
+        }
+    }
+}

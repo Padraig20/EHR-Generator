@@ -103,14 +103,14 @@ def map_entities_to_ndc_icd_code(entities):
             code, description = find_nearest_icd_code(entity)
         if code:
             print(f"The {'NDC' if ent_type == 'MEDICATION' else 'ICD'} code for '{entity}' is {code}, for original description '{description}'")
-            normalized_entities.append((entity, code, description))
+            normalized_entities.append((entity, code, description, ent_type))
         else:
             print(f"No {'NDC' if ent_type == 'MEDICATION' else 'ICD'} code found for '{entity}'")
-            normalized_entities.append((entity, None, None))
+            normalized_entities.append((entity, None, None, ent_type))
     return normalized_entities
 
 #entities = ["COPD", "interstitial lung disease", "hypertension", "bronchodilators", "steroids", "bingboingo bongboingo", "adhd", "attention deficit hyperactivity"]
 #entities = ["hypertension", "metformin", "lisinopril", "diabetes"]
 
-#entities = [('diabetes', 'MEDCOND', 29, 37), ('hypertension', 'MEDCOND', 42, 54), ('metformin', 'MEDICATION', 79, 88), ('lisinopril', 'MEDICATION', 93, 103)]
+#entities = [('diabetes', 'MEDCOND', 29, 37), ('hypertension', 'MEDCOND', 42, 54), ('metformin', 'MEDICATION', 79, 88), ('lisinopril', 'MEDICATION', 93, 103), ('headache', 'SYMPTOM', 0, 7), ('coronary artery bypass grafting', 'PROCEDURE', 0, 31)]
 #print(map_entities_to_ndc_icd_code(entities))
