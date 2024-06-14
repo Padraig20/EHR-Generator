@@ -55,7 +55,7 @@ def load_ndcdata(file_path):
 
     return data
 
-def find_nearest_icd_code(entity, threshold=0.5):
+def find_nearest_icd_code(entity, threshold=0.4):
     entity_embedding = get_embeddings([entity])
     distance, index = nn_model_icd.kneighbors(entity_embedding)
     if distance[0][0] < threshold:
@@ -65,7 +65,7 @@ def find_nearest_icd_code(entity, threshold=0.5):
     else:
         return None, "No sufficiently similar ICD code found."
 
-def find_nearest_ndc_code(entity, threshold=0.5):
+def find_nearest_ndc_code(entity, threshold=0.3):
     entity_embedding = get_embeddings([entity])
     distance, index = nn_model_ndc.kneighbors(entity_embedding)
     if distance[0][0] < threshold:
@@ -94,9 +94,13 @@ nn_model_icd = NearestNeighbors(n_neighbors=1, metric='cosine').fit(description_
 nn_model_ndc = NearestNeighbors(n_neighbors=1, metric='cosine').fit(description_embeddings_ndc)
 
 def map_entities_to_ndc_icd_code(entities):
+    processed_entities = set()
     normalized_entities = []
     for entity in entities:
         entity, ent_type, _, _ = entity
+        if entity in processed_entities:
+            continue
+        processed_entities.add((entity, ent_type))
         if ent_type == 'MEDICATION':
             code, description = find_nearest_ndc_code(entity)
         else:
