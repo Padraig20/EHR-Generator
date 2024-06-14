@@ -20,7 +20,7 @@ Currently, four different types of entities will be matched from the incoming ad
 
 The code and datasets for training for these NER models is done can be found in my [previous repository](https://github.com/Padraig20/Disease-Detection-NLP).
 
-## 🔍ICD/NDC Code Matching
+## 🔍 ICD/NDC Code Matching
 
 For medical entity normalization, we leverage **SapBERT** to create embeddings for ICD (International Classification of Diseases) and NDC (National Drug Code). The core functionalities include generating embeddings for these codes, performing nearest neighbor searches, and determining the cosine similarity between embeddings to find the closest matches based on a defined threshold.
 
