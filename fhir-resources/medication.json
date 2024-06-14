@@ -1,7 +1,6 @@
 {
     "resource": {
         "resourceType": "Medication",
-        "id": "example-medication",
         "code": {
             "coding": [
                 {

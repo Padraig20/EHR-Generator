@@ -1,7 +1,6 @@
 {
     "resource": {
         "resourceType": "Procedure",
-        "id": "example-procedure",
         "code": {
             "coding": [
                 {

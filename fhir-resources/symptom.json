@@ -1,18 +1,14 @@
 {
   "resource": {
-    "resourceType": "Observation",
-    "id": "example-symptom",
-    "category": [
-      {
-        "coding": [
-          {
-            "system": "http://terminology.hl7.org/CodeSystem/observation-category",
-            "code": "symptom",
-            "display": "Symptom"
-          }
-        ]
-      }
-    ],
+    "resourceType": "Condition",
+    "clinicalStatus": {
+      "coding": [
+        {
+          "system": "http://terminology.hl7.org/CodeSystem/condition-clinical",
+          "code": "unknown"
+        }
+      ]
+    },
     "code": {
       "coding": [
         {
@@ -25,6 +21,11 @@
     },
     "subject": {
       "reference": "<patient-id>"
-    }
+    },
+    "note": [
+      {
+        "text": "symptom"
+      }
+    ]
   }
 }

@@ -1,1 +1,4 @@
 .venv/
+
+data/embeddings_icd.npy
+data/embeddings_ndc.npy

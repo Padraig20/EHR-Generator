@@ -66,6 +66,8 @@ def generate_ehr(text, entity_model, patient_id='example/patient'):
 
     normalized_entities = map_entities_to_ndc_icd_code(entities)
     
+    print(normalized_entities)
+    
     ehr_record = knit_fhir_resources(normalized_entities, patient_id)
     return ehr_record
 
