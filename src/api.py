@@ -3,7 +3,7 @@ parser = argparse.ArgumentParser(description='Backend allowing for generation of
 
 args = parser.parse_args()
 
-print("Preparing model...")
+print("Preparing backend...")
 
 from extractors.extract_entities import process_text, load_models
 from extractors.extract_icd_ndc import map_entities_to_ndc_icd_code
@@ -23,7 +23,7 @@ def generate_ehr(text, nlp, loaded_models, patient_id='example/patient'):
     print(normalized_entities)
     
     ehr_record = knit_fhir_resources(normalized_entities, patient_id)
-    return ehr_record, entities
+    return ehr_record, entities, normalized_entities
 
 # preparing backend
 
@@ -39,8 +39,8 @@ print("Serving API now...")
 @app.route('/extract_entities', methods=['POST'])
 def main():
     text = request.get_data(as_text=True)
-    ehr, entities = generate_ehr(text, nlp, loaded_models)
-    return jsonify({'ehr': ehr, 'entities': entities})
+    ehr, entities, normalized_entities = generate_ehr(text, nlp, loaded_models)
+    return jsonify({'ehr': ehr, 'entities': entities, 'normalized_entities': normalized_entities})
 
 if __name__ == '__main__':
     LISTEN = ('0.0.0.0',port)

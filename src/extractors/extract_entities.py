@@ -94,6 +94,8 @@ def load_models(entity_model):
         ner_model = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
     
         loaded_models.append((entity_name, ner_model))
+        
+        print(f"Successfully initialized model {model_path} for {entity_name}...")
     return nlp, loaded_models
 
 # input of script
