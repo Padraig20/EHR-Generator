@@ -32,36 +32,7 @@ def extract_entities_from_text(nlp, models, text):
         entities.extend(model_specific_entities)
     return entities
 
-def process_text(entity_model, text):
-    nlp = spacy.load("en_core_web_sm")
-    loaded_models = [] # list of tuples (entity_name, ner_model)
-
-    for entity_name, model_path in entity_model:
-        #TODO change to new type of model saving
-        #model = AutoModelForTokenClassification.from_pretrained(f"model_{model_path}")
-        #tokenizer = AutoTokenizer.from_pretrained(f"tok_{model_path}")
-        
-        model = AutoModelForTokenClassification.from_pretrained(model_path)
-        tokenizer = AutoTokenizer.from_pretrained(model_path)
-    
-        label_to_ids = {
-            f'B-{entity_name}': 0,
-            f'I-{entity_name}': 1,
-            'O': 2
-        }
-        ids_to_label = {
-            0:f'B-{entity_name}',
-            1:f'I-{entity_name}',
-            2:'O'
-        }
-    
-        model.config.id2label = ids_to_label
-        model.config.label2id = label_to_ids
-    
-        ner_model = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
-    
-        loaded_models.append((entity_name, ner_model))
-    
+def process_text(nlp, loaded_models, text):
     entities = extract_entities_from_text(nlp, loaded_models, text.strip())
     
     # entity reconstruction
@@ -93,6 +64,37 @@ def process_text(entity_model, text):
     print(f"Extracted {len(entities)} entities in total (after reconstruction)")
     
     return entities
+
+def load_models(entity_model):
+    nlp = spacy.load("en_core_web_sm")
+    loaded_models = [] # list of tuples (entity_name, ner_model)
+
+    for entity_name, model_path in entity_model:
+        #TODO change to new type of model saving
+        #model = AutoModelForTokenClassification.from_pretrained(f"model_{model_path}")
+        #tokenizer = AutoTokenizer.from_pretrained(f"tok_{model_path}")
+        
+        model = AutoModelForTokenClassification.from_pretrained(model_path)
+        tokenizer = AutoTokenizer.from_pretrained(model_path)
+    
+        label_to_ids = {
+            f'B-{entity_name}': 0,
+            f'I-{entity_name}': 1,
+            'O': 2
+        }
+        ids_to_label = {
+            0:f'B-{entity_name}',
+            1:f'I-{entity_name}',
+            2:'O'
+        }
+    
+        model.config.id2label = ids_to_label
+        model.config.label2id = label_to_ids
+    
+        ner_model = pipeline("ner", model=model, tokenizer=tokenizer, aggregation_strategy="simple")
+    
+        loaded_models.append((entity_name, ner_model))
+    return nlp, loaded_models
 
 # input of script
 #entity_model = [('MEDCOND', 'medcond'), ('SYMPTOM', 'symptom'), ('MEDICATION', 'medication'), ('PROCEDURE', 'procedure')]
