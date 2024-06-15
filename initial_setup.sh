@@ -9,6 +9,9 @@ source .venv/bin/activate
 echo "Installing dependencies from requirements.txt..."
 pip install -r requirements.txt
 
+echo "Downloading spacy language model..."
+python -m spacy download en_core_web_sm
+
 echo "Moving into the 'data' directory..."
 cd data || { echo "Directory 'data' does not exist. Exiting."; exit 1; }
 
