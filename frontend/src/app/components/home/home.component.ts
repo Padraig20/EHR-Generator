@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from "@angular/router";
 import { AnalyzerService } from "../../services/analyzer.service";
 import { ToastrService } from 'ngx-toastr';
+import { HttpClient } from '@angular/common/http';
 
 interface Colors {
   [key: string]: string;
@@ -15,7 +16,7 @@ type NormalizedEntity = [string, string | null, string | null, string]
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnInit{
   analyzing = false;
   analyzed = false;
   text = '';
@@ -24,17 +25,26 @@ export class HomeComponent {
     'MEDCOND': 'green',
     'MEDICATION': 'blue',
     'PROCEDURE': 'yellow',
-    'SYMPTOM': 'red'
+    'SYMPTOM': 'orange'
   }
   formattedJson = ''
   normalized_entities: NormalizedEntity[] = []
   groupedEntities: { [key: string]: [string, string | null, string | null, string][] } = {};
+  topics: string[] = []
 
   constructor(
     private router: Router,
     private analyzerService: AnalyzerService,
     private notification: ToastrService,
+    private http: HttpClient
   ) {
+  }
+
+  ngOnInit(): void {
+    this.http.get('assets/topics.txt', { responseType: 'text' })
+      .subscribe(data => {
+        this.topics = data.split('\n').map(topic => topic.trim()).filter(topic => topic.length > 0);
+      });
   }
 
   sanitizeHTML(htmlString: string): string {
@@ -43,12 +53,8 @@ export class HomeComponent {
   }
 
   loadExample() {
-    this.text = 'Patient is a 45-year-old man with a history of anaplastic astrocytoma of the spine complicated by sever' +
-      'e lower extremity weakness and urinary retention s/p Foley catheter, high-dose steroids, hypertension, and chroni' +
-      'c pain. The tumor is located in the T-L spine, unresectable anaplastic astrocytoma s/p radiation. Complicated by ' +
-      'progressive lower extremity weakness and urinary retention. Patient initially presented with RLE weakness where h' +
-      'is right knee gave out with difficulty walking and right anterior thigh numbness. MRI showed a spinal cord conus ' +
-      'mass which was biopsied and found to be anaplastic astrocytoma.'
+      const randomTopic = this.topics[Math.floor(Math.random() * this.topics.length)];
+      this.text = randomTopic;
   }
 
   checkSpan(entity: Entity, text: string): boolean {
@@ -59,7 +65,7 @@ export class HomeComponent {
   correctSpan(entity: Entity, text: string): Entity {
     const [entityText, entityType, startSpan, endSpan] = entity;
     let start = startSpan;
-    let end = endSpan + 1;
+    let end = endSpan;
 
     if (text.slice(start, end) == entityText) {
       return [entityText, entityType, start, end]
@@ -83,6 +89,18 @@ export class HomeComponent {
       return [entityText, entityType, start, end]
     }
 
+    start = startSpan;
+    end = endSpan - 2;
+    if (text.slice(start, end) == entityText) {
+      return [entityText, entityType, start, end]
+    }
+
+    start = startSpan + 2;
+    end = endSpan + 1;
+    if (text.slice(start, end) == entityText) {
+      return [entityText, entityType, start, end]
+    }
+
     return entity;
   }
 
@@ -90,7 +108,7 @@ export class HomeComponent {
     entities.sort((a, b) => b[2] - a[2]);
 
     for (let entity of entities) {
-      
+
       if (!this.checkSpan(entity, text)) {
         entity = this.correctSpan(entity, text);
       }
@@ -151,6 +169,8 @@ export class HomeComponent {
     let link = ''
     if (entity === 'MEDICATION') {
       link = `https://ndclist.com/ndc/${code}`
+    } else if (entity === 'PROCEDURE') {
+      link = `https://icdlist.com/icd-10-pcs/${code}`
     } else {
       link = `https://icdlist.com/icd-10/${code}`
     }

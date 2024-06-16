@@ -22,7 +22,8 @@
       </span>
     </button>
 
-    <button type="submit" *ngIf="text.length === 0" (click)="loadExample()"
+    <!-- *ngIf="text.length === 0" -->
+    <button type="submit" (click)="loadExample()"
       class="relative w-full sm:w-fit mt-2 sm:mt-4 md:mt-6 md:shadow-lg shadow-sky-300/50 md:dark:shadow-sky-700/60 text-center sm:text-right px-4 py-2 rounded text-sky-800 enabled:text-sky-900 dark:text-sky-400 enabled:dark:text-sky-500 ring-2 ring-inset ring-sky-800 enabled:hover:border-sky-900 dark:ring-sky-400 dark:enabled:hover:border-sky-500 disabled:opacity-75 disabled:cursor-not-allowed uppercase font-semibold">
       <span>Example Note</span>
     </button>

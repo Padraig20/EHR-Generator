@@ -21,6 +21,11 @@ wget https://github.com/Padraig20/EHR-Generator/releases/download/Embeddings/emb
 echo -e "\e[94mDownloading embeddings_ndc.npy...\e[0m"
 wget https://github.com/Padraig20/EHR-Generator/releases/download/Embeddings/embeddings_ndc.npy
 
+echo -e "\e[94mDownloading the necessary models...\e[0m"
+cd ..
+mkdir models
+cd models || { echo "Directory 'models' does not exist. Exiting."; exit 1; }
+
 echo -e "\e[95m\nSetup complete.\e[0m"
 echo -e "\e[95mMove to the 'src' folder and invoke 'python api.py' to start the backend server.\n\e[0m"
 echo -e "\e[91mMake sure to activate the virtual environment before running the server using 'source .venv/bin/activate'.\e[0m"

@@ -4,3 +4,5 @@ data/embeddings_icd.npy
 data/embeddings_ndc.npy
 
 src/extractors/__pycache__
+
+models/

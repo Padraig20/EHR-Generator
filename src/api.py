@@ -27,7 +27,7 @@ def generate_ehr(text, nlp, loaded_models, patient_id='example/patient'):
 
 # preparing backend
 
-entity_model = [('MEDCOND', 'alvaroalon2/biobert_diseases_ner'), ('MEDICATION', 'alvaroalon2/biobert_chemical_ner')]
+entity_model = [('MEDCOND', 'medcond'), ('MEDICATION', 'medication'), ('PROCEDURE', 'procedure'), ('SYMPTOM', 'symptom')]
 nlp, loaded_models = load_models(entity_model)
 
 app = Flask(__name__)
