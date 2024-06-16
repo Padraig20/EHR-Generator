@@ -51,17 +51,69 @@ export class HomeComponent {
       'mass which was biopsied and found to be anaplastic astrocytoma.'
   }
 
+  checkSpan(entity: Entity, text: string): boolean {
+    const [entityText, entityType, startSpan, endSpan] = entity;
+    return text.slice(startSpan, endSpan) == entityText;
+  }
+
+  correctSpan(entity: Entity, text: string): Entity {
+    const [entityText, entityType, startSpan, endSpan] = entity;
+    let start = startSpan;
+    let end = endSpan + 1;
+
+    if (text.slice(start, end) == entityText) {
+      return [entityText, entityType, start, end]
+    }
+
+    start = startSpan + 1;
+    end = endSpan;
+    if (text.slice(start, end) == entityText) {
+      return [entityText, entityType, start, end]
+    }
+
+    start = startSpan - 1;
+    end = endSpan - 1;
+    if (text.slice(start, end) == entityText) {
+      return [entityText, entityType, start, end]
+    }
+
+    start = startSpan + 1;
+    end = endSpan + 1;
+    if (text.slice(start, end) == entityText) {
+      return [entityText, entityType, start, end]
+    }
+
+    return entity;
+  }
+
   highlightEntities(text: string, entities: Entity[], colors: Colors): string {
     entities.sort((a, b) => b[2] - a[2]);
 
     for (let entity of entities) {
+      
+      if (!this.checkSpan(entity, text)) {
+        entity = this.correctSpan(entity, text);
+      }
+
       const [entityText, entityType, startSpan, endSpan] = entity;
       const color = colors[entityType] || 'grey'; //default color
-      const highlightedText = `<mark class="highlight ${color}"> ${entityText} <span class="descriptor">${entityType}</span></mark>`;
 
-      console.log(text)
+      console.log(text.slice(startSpan, endSpan) == entityText, entityText, text.slice(startSpan, endSpan))
 
-      text = text.slice(0, startSpan) + highlightedText + text.slice(endSpan + 1);
+      let text1 = text.slice(0, startSpan)
+      let text2 = text.slice(endSpan)
+
+      if (entityText.startsWith(' ')) {
+        text1 = text1 + ' '
+      }
+
+      //if (!entityText.endsWith(' ')) {
+      //  text2 = ' ' + text2
+      //}
+
+      const highlightedText = `<mark class="highlight ${color}">${entityText.trim()}<span class="descriptor">${entityType}</span></mark>`;
+
+      text = text1 + highlightedText + text2;
     }
 
     return text;
