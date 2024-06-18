@@ -16,7 +16,7 @@ type NormalizedEntity = [string, string | null, string | null, string]
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit{
+export class HomeComponent implements OnInit {
   analyzing = false;
   analyzed = false;
   text = '';
@@ -53,8 +53,8 @@ export class HomeComponent implements OnInit{
   }
 
   loadExample() {
-      const randomTopic = this.topics[Math.floor(Math.random() * this.topics.length)];
-      this.text = randomTopic;
+    const randomTopic = this.topics[Math.floor(Math.random() * this.topics.length)];
+    this.text = randomTopic;
   }
 
   checkSpan(entity: Entity, text: string): boolean {
@@ -105,20 +105,49 @@ export class HomeComponent implements OnInit{
   }
 
   highlightEntities(text: string, entities: Entity[], colors: Colors): string {
-    entities.sort((a, b) => b[2] - a[2]);
+    entities = entities.filter((entity, index) => {
+      for (let i = index + 1; i < entities.length; i++) {
+        const [_, __, startSpan, endSpan] = entity;
+        const [___, ____, otherStartSpan, otherEndSpan] = entities[i];
+        if (
+          (startSpan >= otherStartSpan && startSpan <= otherEndSpan) ||
+          (endSpan >= otherStartSpan && endSpan <= otherEndSpan)
+        ) {
+          if (entity[1] !== entities[i][1]) {
+            if (endSpan - startSpan > otherEndSpan - otherStartSpan) {
+              entity[1] = entity[1] + '/' + entities[i][1];
+            } else {
+              entities[i][1] = entity[1] + '/' + entities[i][1];
+              entity = entities[i];
+            }
+          }
+          entities.splice(i, 1);
+          i--;
+        }
+      }
+      return true;
+    });
+
+    entities.sort((a, b) => b[3] - a[3]);
+
+
+    let copied = text;
 
     for (let entity of entities) {
 
-      if (!this.checkSpan(entity, text)) {
-        entity = this.correctSpan(entity, text);
+      if (!this.checkSpan(entity, copied)) {
+        entity = this.correctSpan(entity, copied);
       }
 
       const [entityText, entityType, startSpan, endSpan] = entity;
-      const color = colors[entityType] || 'grey'; //default color
+      let color = colors[entityType] || 'grey'; //default color
+      if (entityType.includes('/')) {
+        color = 'grey';
+      }
 
-      console.log(text.slice(startSpan, endSpan) == entityText, entityText, text.slice(startSpan, endSpan))
+      console.log(text.slice(startSpan, endSpan) == entityText, entityText, text.slice(startSpan, endSpan), color)
 
-      let text1 = text.slice(0, startSpan)
+      let text1 = copied.slice(0, startSpan)
       let text2 = text.slice(endSpan)
 
       if (entityText.startsWith(' ')) {
@@ -132,6 +161,8 @@ export class HomeComponent implements OnInit{
       const highlightedText = `<mark class="highlight ${color}">${entityText.trim()}<span class="descriptor">${entityType}</span></mark>`;
 
       text = text1 + highlightedText + text2;
+
+      console.log(text)
     }
 
     return text;
@@ -160,7 +191,7 @@ export class HomeComponent implements OnInit{
     return Object.keys(this.groupedEntities);
   }
 
-  goToWebsite(event: MouseEvent, code: string|null, entity: string): void {
+  goToWebsite(event: MouseEvent, code: string | null, entity: string): void {
     event.preventDefault();
     if (!code) {
       this.notification.error('No ICD/NDC code found!');
@@ -209,7 +240,7 @@ export class HomeComponent implements OnInit{
         error: error => {
           console.log('Error analyzing note: ' + error);
           this.analyzing = false;
-          this.notification.error('Error analyzing note');
+          this.notification.error('Have you started the local backend on port 5000?', 'Error analyzing note');
         }
       });
     }
