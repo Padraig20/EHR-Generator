@@ -71,8 +71,8 @@ def load_models(entity_model):
 
     for entity_name, model_path in entity_model:
         #TODO change to new type of model saving
-        model = AutoModelForTokenClassification.from_pretrained(f"../models/{model_path}/model_{model_path}")
-        tokenizer = AutoTokenizer.from_pretrained(f"../models/{model_path}/tok_{model_path}")
+        model = AutoModelForTokenClassification.from_pretrained(f"../models/model_{model_path}")
+        tokenizer = AutoTokenizer.from_pretrained(f"../models/tok_{model_path}")
     
         label_to_ids = {
             f'B-{entity_name}': 0,
